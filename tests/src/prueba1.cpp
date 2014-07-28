@@ -112,8 +112,13 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		setup = true;
 		expDone = false;
 		lapDone = false;
-		noLaps = 3; //Vueltas + 1
 		timeInit = Game::GAME_TIME;
+		if (timeInit < 100){
+			noLaps = 3; //Vueltas + 1
+		} else {
+			noLaps = 2; //Vueltas
+		}
+		std::cout << "Starting at: " << timeInit << std::endl;
 		commands->move(xinit, yinit);
 	} else {
 		staminaInit = Self::STAMINA_CAPACITY;
@@ -218,13 +223,16 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			Geometry::Vector2D potentialGo = potential.computePotential(playerPos, obstacles, theGoal);
 			//potentialGo.scale(10.0); //Escalamiento
 			potPosition = Position((double) (potentialGo.dx + p->x), (double) (potentialGo.dy + p->y));
-			std::cout << Game::GAME_TIME << ": Componente X: " << potentialGo.dx << " Componente Y: " << potentialGo.dy << std::endl;
+			//std::cout << Game::GAME_TIME << ": Componente X: " << potentialGo.dx << " Componente Y: " << potentialGo.dy << std::endl;
 
-			if (p->getDistanceTo(&potPosition) >= thrDis){
-				positionToGo = potPosition;
-			} else if(p->getDistanceTo(&potPosition) > p->getDistanceTo(&posAgent.front())){
+			if (p->getDistanceTo(&potPosition) > p->getDistanceTo(&posAgent.front())){
+				//std::cout << Game::GAME_TIME << ": Esta cerca" << std::endl;
 				positionToGo = posAgent.front();
+			} else if (p->getDistanceTo(&potPosition) >= thrDis){
+				//std::cout << Game::GAME_TIME << ": Lo manda el potencial" << std::endl;
+				positionToGo = potPosition;
 			} else {
+				//std::cout << Game::GAME_TIME << ": Potential es poco" << std::endl;
 				positionToGo = posAgent.front();
 			}
 
@@ -237,8 +245,9 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			positionToGo = posAgent.front();
 		}
 
-		std::cout << Game::GAME_TIME << ": Estoy en X: " << p->x << " Y: " << p->y << std::endl;
-		std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+		//std::cout << Game::GAME_TIME << ": Estoy en X: " << p->x << " Y: " << p->y << std::endl;
+		//std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+		//std::cout << Game::GAME_TIME << ": Waypoint X: " << posAgent.front().x << " Y: " << posAgent.front().y << std::endl;
 
 	}else {
 		if (!named) { //Bautizo
@@ -283,7 +292,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			}
 		} else{
 			if (!arrived){
-				std::cout << Game::GAME_TIME << ": Llegue a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+				//std::cout << Game::GAME_TIME << ": Llegue a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 				if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
 					if ((posAgent.front().x == xinit) && (yinit == posAgent.front().y)) {
 						if (!lapDone){
@@ -326,8 +335,8 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			if(expDone){
 				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 				totalTime = Game::GAME_TIME - timeInit;
-				std::cout << "SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				std::clog << ++noExp << ": Team:"<< Self::TEAM_NAME <<": Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+				std::clog << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				setup = false;
 				commands->say("END");
 			}

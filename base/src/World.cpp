@@ -195,7 +195,7 @@ void World::matchPlayers(std::vector<Player> &past_players, std::vector<Player> 
 				double d = sqrt(dx * dx + dy * dy);
 				if (d > (pp->getDistanceError() + np->getDistanceError()) * Configs::TRACKING_THRESHOLD) {
 					// If the distance between the two players is greater than theirs errors plus the threshold we do not accept the tracking
-					std::cout << Game::GAME_TIME << ": reject match with value " << (*it)->h << std::endl;
+					//std::cout << Game::GAME_TIME << ": reject match with value " << (*it)->h << std::endl;
 					continue;
 				}
 				// We infer physical characteristics
@@ -308,7 +308,7 @@ void World::matchPlayersPF(std::vector<Player> &new_players) {
 					double d = sqrt(dx * dx + dy * dy);
 					if (d > (pp->getDistanceError() + np->getDistanceError()) * Configs::TRACKING_THRESHOLD) {
 						// If the distance between the two players is greater than theirs errors plus the threshold we do not accept the tracking
-						std::cout << Game::GAME_TIME << ": reject match with value " << (*it)->h << std::endl;
+						//std::cout << Game::GAME_TIME << ": reject match with value " << (*it)->h << std::endl;
 						continue;
 					}
 					// We infer physical characteristics
