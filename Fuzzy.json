@@ -1,0 +1,13 @@
+{"team": {
+  "1": {
+  	"logging": true, //Para activar logger
+  	"sensors": {
+  		"body": true //Logear sensebody
+  	},
+  	"world": {
+  		"history": true, //Para la memoria
+  		"tracking": true //Para el tracking
+  	}
+  }
+}
+}

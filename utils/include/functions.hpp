@@ -211,15 +211,14 @@ struct Linear {
 };
 
 /*
- * f(x) = a / (x - b)
+ * f(x) = a / (x - b) + c
  */
 struct Inverse {
-	double a;
-	double b;
-	Inverse() : a(1.0), b(0.0) {};
-	Inverse(double a, double b) : a(a), b(b) {};
+	double a, b, c;
+	Inverse() : a(1.0), b(0.0), c(0.0) {};
+	Inverse(double a, double b, double c) : a(a), b(b), c(c) {};
 	double evaluate(double x) {
-		return a / (x - b);
+		return a / (x - b) + c;
 	}
 };
 

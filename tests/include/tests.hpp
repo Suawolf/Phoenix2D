@@ -22,6 +22,9 @@
 #define TESTS_HPP_
 
 #include "dribble.hpp"
+#include "prueba1.hpp"
+#include "prueba2.hpp"
+#include "prueba3.hpp"
 #include "localization.hpp"
 #include "worldtest.hpp"
 
