@@ -63,6 +63,7 @@ void onStart() {
 
 void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
 	if(!setup){ //Setup
+		named = false;
 		commands->changeView("narrow");
 		noCollisions = 0.0;
 		// AQUI SE DEFINE LA POSICION A ENVIAR
