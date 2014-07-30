@@ -44,12 +44,15 @@ boost::circular_buffer<Position> posAgent(6);
 boost::circular_buffer<Position> dummyPath1(2);
 boost::circular_buffer<Position> dummyPath2(2);
 boost::circular_buffer<Position> dummyPath3(2);
+boost::circular_buffer<Position>::iterator dP1origin;
+boost::circular_buffer<Position>::iterator dP2origin;
+boost::circular_buffer<Position>::iterator dP3origin;
 Position positionToGo, potPosition, fuzzyPosition;
 
 
 /*
  * f(x) = a/(b-exp((-x-c)/d))
- */
+
 struct Exponential {
 	double a;
 	double b;
@@ -60,7 +63,7 @@ struct Exponential {
 	double evaluate(double x) {
 		return a/(b-exp((-x-c)/d));
 	}
-};
+};*/
 
 void onStart() {
 	posAgent.push_back(Position(-20.0,  20.0));
@@ -72,12 +75,15 @@ void onStart() {
 
 	dummyPath1.push_back(Position(-10.0, -25.0));
 	dummyPath1.push_back(Position(-10.0, -15.0));
+	dP1origin = dummyPath1.begin();
 
 	dummyPath2.push_back(Position(  0.0, -10.0));
 	dummyPath2.push_back(Position(  0.0, -30.0));
+	dP2origin = dummyPath2.begin();
 
 	dummyPath3.push_back(Position( 10.0, -28.0));
 	dummyPath3.push_back(Position( 10.0, -11.0));
+	dP3origin = dummyPath3.begin();
 }
 
 void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
@@ -90,12 +96,15 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			yinit =  20.0;
 		} else {
 			if (Self::UNIFORM_NUMBER == 1) {
+				dummyPath1.rotate(dP1origin);
 				xinit = dummyPath1.front().x;
 				yinit = dummyPath1.front().y;
 			} else if (Self::UNIFORM_NUMBER == 2) {
+				dummyPath2.rotate(dP2origin);
 				xinit = dummyPath2.front().x;
 				yinit = dummyPath2.front().y;
 			} else if (Self::UNIFORM_NUMBER == 3) {
+				dummyPath3.rotate(dP3origin);
 				xinit = dummyPath3.front().x;
 				yinit = dummyPath3.front().y;
 			} else if (Self::UNIFORM_NUMBER == 4) {
@@ -118,7 +127,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		} else {
 			noLaps = 2; //Vueltas
 		}
-		std::cout << "Starting at: " << timeInit << std::endl;
+		//std::cout << "Starting at: " << timeInit << std::endl;
 		commands->move(xinit, yinit);
 	} else {
 		staminaInit = Self::STAMINA_CAPACITY;
@@ -128,6 +137,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
 	const Position* p = Self::getPosition();
 	double angNeck = 60.0;
+	setup = false;
 
 	if(!Self::TEAM_NAME.compare("Fuzzy")){
 		if (!named) { //Bautizo
@@ -337,7 +347,6 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				totalTime = Game::GAME_TIME - timeInit;
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				std::clog << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				setup = false;
 				commands->say("END");
 			}
 

@@ -1,0 +1,8 @@
+wait 10
+do 5
+change_to play_on
+wait_for_msg END
+change_to before_kick_off
+recover
+wait 10
+end_do
