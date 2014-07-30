@@ -45,12 +45,14 @@ then
 	then
 			./agent test prueba3 Fuzzy & sleep 1
 			./agent test prueba3 Dummy & sleep 1
+			./agent test prueba3 Dummy & sleep 1
 			./agent trainer trainer/prueba3.phx
 	elif [ "$2" == "potential" ]
 	then
 			./agent test prueba3 Potential & sleep 1
 			./agent test prueba3 Dummy & sleep 1
-			./agent trainer trainer/prueba2.phx
+			./agent test prueba3 Dummy & sleep 1
+			./agent trainer trainer/prueba3.phx
 	fi
 else
 	echo "Pruebas MICAI 2014"
