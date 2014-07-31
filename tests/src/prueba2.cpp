@@ -185,9 +185,13 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				obstacles.push_back(opponents[i]->getPosition()->getPoint());
 			}
 
-			Math::Inverse equObstacles(15.0, -0.8, -1.5);
-			Math::Linear equGoal(-0.0125, -2);
-			Geometry::PFields<Math::Inverse, Math::Linear> potential(equObstacles, equGoal);
+			//Math::Inverse equObstacles(15.0, -0.8, -1.5);
+			//Math::Linear equGoal(-0.0125, -2);
+			//Geometry::PFields<Math::Inverse, Math::Linear> potential(equObstacles, equGoal);
+
+			Math::Inverse equObstacles(12.5, -0.8, -1.5);
+			Math::Inverse equGoal(-20.0, -0.9, -0.5);
+			Geometry::PFields<Math::Inverse, Math::Inverse> potential(equObstacles, equGoal);
 
 			Geometry::Vector2D potentialGo = potential.computePotential(playerPos, obstacles, theGoal);
 			//potentialGo.scale(10.0); //Escalamiento
@@ -215,7 +219,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		}
 
 		//std::cout << Game::GAME_TIME << ": Estoy en X: " << p->x << " Y: " << p->y << std::endl;
-		std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+		//std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 		//std::cout << Game::GAME_TIME << ": Waypoint X: " << posAgent.front().x << " Y: " << posAgent.front().y << std::endl;
 
 	}else {
@@ -238,19 +242,19 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 	if (d > thrDis) {
 		arrived = false;
 		double dir = p->getDirectionTo(&positionToGo);
-		std::cout << Game::GAME_TIME << ": DirToGo: " << dir << std::endl;
+		//std::cout << Game::GAME_TIME << ": DirToGo: " << dir << std::endl;
 		if (fabs(dir) > 10.0) { //Cambiar precisi—n
 			commands->turn(dir);
 			//DEBUGGING QUITAR LUEGO
-			if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
-				std::cout << Game::GAME_TIME << ": Turning: " << dir << std::endl;
-			}
+			//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
+			//	std::cout << Game::GAME_TIME << ": Turning: " << dir << std::endl;
+			//}
 		} else {
 			commands->dash(dashPower, 0.0);
 			//DEBUGGING QUITAR LUEGO
-			if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
-				std::cout << Game::GAME_TIME << "Dashing" << std::endl;
-			}
+			//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
+			//	std::cout << Game::GAME_TIME << "Dashing" << std::endl;
+			//}
 		}
 	} else{
 		if (!arrived){
@@ -295,7 +299,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 			totalTime = Game::GAME_TIME - timeInit;
 			std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-			std::clog << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+			std::clog << "P2-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 			commands->say("END");
 		}
 

@@ -88,6 +88,7 @@ void onStart() {
 
 void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
 	if(!setup){ //Setup
+		arrived = false;
 		commands->changeView("narrow");
 		noCollisions = 0.0;
 		// AQUI SE DEFINE LA POSICION A ENVIAR
@@ -226,9 +227,13 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				obstacles.push_back(opponents[i]->getPosition()->getPoint());
 			}
 
-			Math::Inverse equObstacles(15.0, -0.8, -1.5);
-			Math::Linear equGoal(-0.0125, -2);
-			Geometry::PFields<Math::Inverse, Math::Linear> potential(equObstacles, equGoal);
+			//Math::Inverse equObstacles(15.0, -0.8, -1.5);
+			//Math::Linear equGoal(-0.0125, -2);
+			//Geometry::PFields<Math::Inverse, Math::Linear> potential(equObstacles, equGoal);
+
+			Math::Inverse equObstacles(12.5, -0.8, -1.5);
+			Math::Inverse equGoal(-20.0, -0.9, -0.5);
+			Geometry::PFields<Math::Inverse, Math::Inverse> potential(equObstacles, equGoal);
 
 			Geometry::Vector2D potentialGo = potential.computePotential(playerPos, obstacles, theGoal);
 			//potentialGo.scale(10.0); //Escalamiento
@@ -346,7 +351,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 				totalTime = Game::GAME_TIME - timeInit;
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				std::clog << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+				std::clog << "P1-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				commands->say("END");
 			}
 

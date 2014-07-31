@@ -246,6 +246,7 @@ boost::regex see_regex("\\(([^()]+)\\)\\s*([\\d\\.\\-etk\\s]*)");
 std::string see;
 
 void *seeHandler(void* arg) {
+	usleep(10000);
 	if (pthread_mutex_lock(&sense_body_mutex) != 0) {
 		std::cerr << "Parser::process_sense_body(void*) -> cannot lock sense body mutex" << std::endl;
 		return 0;

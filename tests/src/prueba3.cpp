@@ -25,6 +25,7 @@ bool setup = false;
 bool named = false;
 bool arrived = false;
 bool expDone = false;
+bool turned = false;
 double pNeck = 1;
 double dashPower = 100.0;
 double thrDis = 1.0;
@@ -41,6 +42,7 @@ int noExp = 0;
 
 boost::circular_buffer<Position> posAgent(2);
 Position positionToGo, potPosition, fuzzyPosition, goalPosition;
+Position lastPos = Position(30.0, 0.0);
 
 void onStart() {
 	goalPosition = Position(40.0, 0.0);
@@ -57,10 +59,10 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		} else {
 			if (Self::UNIFORM_NUMBER == 1) {
 				xinit =   0.0;
-				yinit = -20.0;
+				yinit =   0.0;
 			} else if (Self::UNIFORM_NUMBER == 2) {
-				xinit = -40.0;
-				yinit =  20.0;
+				xinit = -30.0;
+				yinit =   0.0;
 			}
 		}
 		setup = true;
@@ -105,9 +107,10 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
 	const Position* p = Self::getPosition();
 	const Position* oppPosition;
-	bool lost = false;
+	bool lost = true;
 	double angNeck = 60.0;
 	setup = false;
+	turned = false;
 
 
 	if(!Self::TEAM_NAME.compare("Fuzzy")){
@@ -196,9 +199,9 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				obstacles.push_back(opponents[i]->getPosition()->getPoint());
 			}
 
-			Math::Inverse equObstacles(15.0, -0.8, -1.5);
-			Math::Linear equGoal(-0.0125, -2);
-			Geometry::PFields<Math::Inverse, Math::Linear> potential(equObstacles, equGoal);
+			Math::Inverse equObstacles(12.5, -0.8, -1.5);
+			Math::Inverse equGoal(-20.0, -0.9, -0.5);
+			Geometry::PFields<Math::Inverse, Math::Inverse> potential(equObstacles, equGoal);
 
 			Geometry::Vector2D potentialGo = potential.computePotential(playerPos, obstacles, theGoal);
 			//potentialGo.scale(10.0); //Escalamiento
@@ -232,19 +235,52 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		}
 
 		std::vector<Player*> opponents = worldModel.getPlayersOrderedByDistanceTo(*Self::getPosition());
-		if (opponents.size() > 0){ //Encuentra al jugador
+		if (opponents.size() > 0){ //Ve algo
 			for (int i = 0; i < opponents.size(); ++i){
 				Player *aPlayer = opponents [i];
-				if (!aPlayer->getTeam().compare("opp")){
-					std::cout << Game::GAME_TIME << ": Soy #: " << Self::UNIFORM_NUMBER << " And I saw  my bitch: " << aPlayer->getTeam() << std::endl;
+				if (!aPlayer->getTeam().compare("opp")){ //Encuentra al jugador
+					//std::cout << Game::GAME_TIME << ": Soy #: " << Self::UNIFORM_NUMBER << " And I saw  my bitch: " << aPlayer->getTeam() << std::endl;
 					oppPosition = aPlayer->getPosition();
 					positionToGo = *oppPosition;
-					pNeck = Self::HEAD_ANGLE;
-					commands->turnNeck(-pNeck);
+					lost = false;
 				}
 			}
+			if (!lost){
+				pNeck = Self::HEAD_ANGLE;
+				commands->turnNeck(-pNeck);
+			} else {
+				//Implementar Busqueda
+				if(Self::HEAD_ANGLE == 0){ //Turn Neck
+					if (pNeck > 0){
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(-60.0);
+					} else {
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(60.0);
+					}
+				}else if(Self::HEAD_ANGLE > 0){
+					if (pNeck > 0){
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(-60.0);
+					} else {
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(60.0);
+					}
+				} else {
+					if (pNeck > 0){
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(-60.0);
+					} else {
+						pNeck = Self::HEAD_ANGLE;
+						commands->turnNeck(60.0);
+					}
+				}
+				positionToGo = lastPos;
+			}
+
 
 		} else { //No encuentra al jugador y lo busca
+			lost = true;
 
 			//Implementar Busqueda
 			if(Self::HEAD_ANGLE == 0){ //Turn Neck
@@ -274,12 +310,11 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			}
 
 
-			std::cout << Game::GAME_TIME << ": Soy #: " << Self::UNIFORM_NUMBER << " No veo ni madres" << std::endl;
-			positionToGo = *p;
+			//std::cout << Game::GAME_TIME << ": Soy #: " << Self::UNIFORM_NUMBER << " No veo ni madres" << std::endl;
+			positionToGo = lastPos;
 		}
 	}
 	//Aqui empieza a moverse.
-	//std::cout << "X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 	double d = p->getDistanceTo(&positionToGo);
 	if (d > 0.5) {
 		arrived = false;
@@ -304,7 +339,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 			totalTime = Game::GAME_TIME - timeInit;
 			std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-			std::clog << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+			std::clog <<"P3-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 			commands->say("END");
 		}
 

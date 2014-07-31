@@ -1,5 +1,5 @@
 wait 10
-do 100
+do 3360
 change_to play_on
 wait_for_msg END
 change_to before_kick_off
