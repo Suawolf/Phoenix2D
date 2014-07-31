@@ -241,15 +241,15 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		if (fabs(dir) > 10.0) { //Cambiar precisi—n
 			commands->turn(dir);
 			//DEBUGGING QUITAR LUEGO
-			//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
-			//	std::cout << "Turning" << std::endl;
-			//}
+			if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
+				std::cout << Game::GAME_TIME << ": Turning: " << dir << std::endl;
+			}
 		} else {
 			commands->dash(dashPower, 0.0);
 			//DEBUGGING QUITAR LUEGO
-			//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
-			//	std::cout << "Dashing" << std::endl;
-			//}
+			if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
+				std::cout << Game::GAME_TIME << "Dashing" << std::endl;
+			}
 		}
 	} else{
 		if (!arrived){
