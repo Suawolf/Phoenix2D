@@ -215,7 +215,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		}
 
 		//std::cout << Game::GAME_TIME << ": Estoy en X: " << p->x << " Y: " << p->y << std::endl;
-		//std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+		std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 		//std::cout << Game::GAME_TIME << ": Waypoint X: " << posAgent.front().x << " Y: " << posAgent.front().y << std::endl;
 
 	}else {
@@ -231,7 +231,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			positionToGo = dummyPath2.front();
 			dashPower = 100.0;
 		}
-		std::cout << "Soy Dummy #: " << Self::UNIFORM_NUMBER << ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
+		//std::cout << "Soy Dummy #: " << Self::UNIFORM_NUMBER << ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 	}
 
 	double d = p->getDistanceTo(&positionToGo);
