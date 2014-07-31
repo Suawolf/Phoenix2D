@@ -238,6 +238,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 	if (d > thrDis) {
 		arrived = false;
 		double dir = p->getDirectionTo(&positionToGo);
+		std::cout << Game::GAME_TIME << ": DirToGo: " << dir << std::endl;
 		if (fabs(dir) > 10.0) { //Cambiar precisi—n
 			commands->turn(dir);
 			//DEBUGGING QUITAR LUEGO
