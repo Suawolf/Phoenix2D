@@ -64,6 +64,7 @@ void onStart() {
 void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, Commands* commands) {
 	if(!setup){ //Setup
 		named = false;
+		arrived = false;
 		commands->changeView("narrow");
 		noCollisions = 0.0;
 		// AQUI SE DEFINE LA POSICION A ENVIAR
@@ -230,6 +231,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			positionToGo = dummyPath2.front();
 			dashPower = 100.0;
 		}
+		std::cout << "Soy Dummy #: " << Self::UNIFORM_NUMBER << ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << std::endl;
 	}
 
 	double d = p->getDistanceTo(&positionToGo);
