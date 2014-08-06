@@ -269,9 +269,9 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				turnAngle = fuzzyOut[1];
 			}
 
-			turnAngle = std::round(fuzzyOut[1]);
+			turnAngle = round(fuzzyOut[1]);
 
-			strafePower = std::round(fuzzyOut[2]);
+			strafePower = round(fuzzyOut[2]);
 
 			//turnAngle = turnAngle + p->getDirectionTo(&posAgent.front());
 			turnAngle = p->getDirectionTo(&posAgent.front());
@@ -295,12 +295,12 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			if (fuzzyOut[0] > 100.0){
 				dashPower = 100.0;
 			} else {
-				dashPower = std::round(fuzzyOut[0]);
+				dashPower = round(fuzzyOut[0]);
 			}
 			if (std::abs(fuzzyOut[2]) < 1.0){
 				strafePower = 0.0;
 			} else {
-				strafePower = std::round(fuzzyOut[2]);
+				strafePower = round(fuzzyOut[2]);
 			}
 			positionToGo = posAgent.front();
 			//std::cout << Game::GAME_TIME << "  es difuso" << std::endl;
