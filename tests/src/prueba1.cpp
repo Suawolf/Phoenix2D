@@ -131,10 +131,9 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			if (countInd > popSize){
 				ga.runGeneration(true);
 				countPop++;
-				for (std::vector<int>::iterator itvar = it->variables.begin(); itvar != it->variables.end(); ++itvar) {
-					//Effort
-					//changeMF("effort", "tired", );
-				}
+				std::vector<int> variable = it->variables; //De 0 a 91
+				//Define los valores de 0 a 91 en el orden, hay que escalarlos segun los rangos m‡ximos de cada variable
+				fuzzySpace::changeMF("effort", "tired", (double) (variable[0]) / 8192, (double) (variable[1]) / 8192);
 				countInd = 0;
 			}
 		}
@@ -490,8 +489,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				std::clog << "P1-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				double eval = 2000 + (800 - totalTime) + (std::abs(25000 - totalStamina) + (25000 - totalStamina)) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
 				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
-
-
+				std::clog << "P1-" << noExp << " : Eval: " << eval << std::endl;
 
 				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
 

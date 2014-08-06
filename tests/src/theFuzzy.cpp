@@ -414,9 +414,11 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
  * Variable Name, a, b,c, d
  */
 void changeMF(string variable, string nameMF, double a, double b, double c, double d){
+	//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::Trapezoidal(double a, double b, double c, double d));
 
 }
 void changeMF(string variable, string nameMF, double a, double b){
+	//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
 
 }
 }
