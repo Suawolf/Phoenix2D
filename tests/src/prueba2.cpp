@@ -18,6 +18,7 @@
 #include "Commands.hpp"
 #include "Message.hpp"
 #include "WorldModel.hpp"
+#include "theFuzzy.hpp"
 
 namespace Prueba2 {
 
@@ -135,6 +136,12 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 
 
 		//INSERTA AQUI LOS ALGORITMOS DE MOVIMIENTO PARA FUZZY
+		std::vector<Player*> opponents = worldModel.getPlayersOrderedByDistanceTo(*Self::getPosition());
+		if (opponents.size() > 0){
+
+				}else {
+
+				}
 		positionToGo = posAgent.front();
 		dashPower = 100.0;
 

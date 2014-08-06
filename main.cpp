@@ -87,11 +87,11 @@ void printHelp();
 
 void printVersion();
 
-void runTest(std::string test, char type, char* teamname, char* hostname);
+void runTest(std::string test, char type, std::string teamname, std::string hostname);
 
-void runAI(char type, char* teamname, char* hostname);
+void runAI(char type, std::string teamname, std::string hostname);
 
-void runTrainer(char* script, char* hostname);
+void runTrainer(std::string script, std::string hostname);
 
 int main(int argc, char **argv) {
 	if (argc < 2) {
@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
 	}
 	std::string command = std::string(argv[1]);
 	std::string test_name;
-	char* team_name = "Phoenix2D";
+	std::string team_name("Phoenix2D");
 	char agent_type = 'p';
-	char* hostname = "localhost";
+	std::string hostname("localhost");
 	if (command.compare("--version") == 0) {
 		printVersion();
 	}
@@ -116,16 +116,16 @@ int main(int argc, char **argv) {
 		case 2:
 			break;
 		case 3:
-			team_name = argv[2];
+			team_name = std::string(argv[2]);
 			break;
 		case 4:
-			team_name = argv[2];
+			team_name = std::string(argv[2]);
 			agent_type = argv[3][0];
 			break;
 		default:
-			team_name = argv[2];
+			team_name = std::string(argv[2]);
 			agent_type = argv[3][0];
-			hostname = argv[4];
+			hostname = std::string(argv[4]);
 			break;
 		}
 		runAI(agent_type, team_name, hostname);
@@ -142,29 +142,29 @@ int main(int argc, char **argv) {
 			break;
 		case 4:
 			test_name = std::string(argv[2]);
-			team_name = argv[3];
+			team_name = std::string(argv[3]);
 			break;
 		case 5:
 			test_name = std::string(argv[2]);
-			team_name = argv[3];
+			team_name = std::string(argv[3]);
 			agent_type = argv[4][0];
 			break;
 		default:
 			test_name = std::string(argv[2]);
-			team_name = argv[3];
+			team_name = std::string(argv[3]);
 			agent_type = argv[4][0];
-			hostname = argv[5];
+			hostname = std::string(argv[5]);
 			break;
 		}
 		runTest(test_name, agent_type, team_name, hostname);
 	}
 	else if (command.compare("trainer") == 0) {
-		char* script;
-		char* hostname = "localhost";
+		std::string script;
+		//char* hostname = "localhost";
 		if (argc > 2) {
-			script = argv[2];
+			script = std::string(argv[2]);
 			if (argc > 3) {
-				hostname = argv[3];
+				hostname = std::string(argv[3]);
 			}
 			runTrainer(script, hostname);
 		} else {
@@ -200,7 +200,7 @@ void printHelp() {
 	std::cout << "\n<agent_type> can be p(layer), g(oalie) or c(oach)" << std::endl;
 }
 
-void runTest(std::string test, char type, char* teamname, char* hostname) {
+void runTest(std::string test, char type, std::string teamname, std::string hostname) {
 	Configs::loadConfigs("");
 	Phoenix::Controller controller(teamname, type, hostname);
 	loadTest(test, controller);
@@ -209,7 +209,7 @@ void runTest(std::string test, char type, char* teamname, char* hostname) {
 	controller.disconnect();
 }
 
-void runAI(char type, char* teamname, char* hostname) {
+void runAI(char type, std::string teamname, std::string hostname) {
 	Configs::loadConfigs("");
 	Phoenix::Controller controller(teamname, type, hostname);
 	loadAI(controller);
@@ -218,10 +218,10 @@ void runAI(char type, char* teamname, char* hostname) {
 	controller.disconnect();
 }
 
-void runTrainer(char* script, char* hostname) {
+void runTrainer(std::string script, std::string hostname) {
 //	Configs::loadConfigs("");
 	Phoenix::Controller controller("trainer", 't', hostname);
-	controller.registerTrainerScript(std::string(script));
+	controller.registerTrainerScript(script);
 	controller.connect();
 	controller.run();
 	controller.disconnect();

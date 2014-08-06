@@ -18,6 +18,7 @@
 #include "Commands.hpp"
 #include "Message.hpp"
 #include "WorldModel.hpp"
+#include "theFuzzy.hpp"
 
 namespace Prueba3 {
 
@@ -30,6 +31,12 @@ double pNeck = 1;
 double dashPower = 100.0;
 double thrDis = 1.0;
 double xinit, yinit;
+
+//FUZZY
+double prevDistance = -1.0;
+double timePDist = 0.0;
+double prevAngle = 1000.0;
+double timePAng = 0.0;
 
  //METRICS
 double noCollisions;
@@ -147,7 +154,43 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			//std::cout << "Neck Turn: " << -pNeck << std::endl;
 		}
 
+
 		//INSERTA AQUI LOS ALGORITMOS DE MOVIMIENTO PARA FUZZY
+		std::vector<Player*> opponents = worldModel.getPlayersOrderedByDistanceTo(*Self::getPosition());
+		if (opponents.size() > 0){
+			Position *oppPos = opponents[0]->getPosition();
+
+			double yLoc = p->y;
+			double effort = Self::EFFORT;
+			double stamina = Self::STAMINA;
+			double distance =  p->getDistanceTo(oppPos);
+			double relSpeed;
+			if (prevDistance == -1.0){
+				relSpeed = 0.0;
+			} else {
+				relSpeed = (prevDistance - distance)/(Game::GAME_TIME - timePDist);
+			}
+
+			prevDistance = distance;
+
+			double direction = p->getDirectionTo(oppPos);
+			double angSpeed;
+			if (prevAngle == 1000.0){
+				angSpeed = 0.0;
+			} else {
+				angSpeed = (direction -  prevAngle)/(Game::GAME_TIME - timePAng);
+			}
+
+			prevAngle = direction;
+			timePAng = timePDist = Game::GAME_TIME;
+
+			std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << std::endl;
+			std::cout << Game::GAME_TIME << ": distance: " << distance  << " Relative Speed: " << relSpeed << std::endl;
+			std::cout << Game::GAME_TIME << ": direction: " << direction  << " Angular Speed: " << angSpeed << std::endl;
+
+		}else {
+
+		}
 		positionToGo = goalPosition;
 		dashPower = 100.0;
 
