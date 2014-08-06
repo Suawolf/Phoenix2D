@@ -409,6 +409,10 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 
 	return fuzzyOutput;
 }
+/*!
+ * Changes fuzzy Variables
+ * Variable Name, a, b,c, d
+ */
 void changeMF(string variable, string nameMF, double a, double b, double c, double d){
 
 }

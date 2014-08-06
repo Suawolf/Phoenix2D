@@ -35,6 +35,10 @@ GAlgorithm::~GAlgorithm() {
 
 }
 
+std::vector<Individual> GAlgorithm::getGeneration() {
+	return generation;
+}
+
 void GAlgorithm::addVariable(int bits) {
 	if (bits > max_var_size) {
 		return;

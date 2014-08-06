@@ -93,6 +93,7 @@ public:
 	void runGeneration(bool per_individual = false);
 	std::vector<Individual>::iterator begin();
 	std::vector<Individual>::iterator end();
+	std::vector<Individual> getGeneration();
 private:
 	int max_var_size;
 	double p_cross;

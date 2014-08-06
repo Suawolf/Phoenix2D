@@ -19,8 +19,17 @@
 #include "Message.hpp"
 #include "WorldModel.hpp"
 #include "theFuzzy.hpp"
+#include "GAlgorithm.hpp"
 
 namespace Prueba1 {
+
+//GA
+bool onGA = false; //Hacer False para anular GA
+Genetics::GAlgorithm ga(0.8, 0.2);
+int popSize = 30;
+int countInd = -1; //contador de individuos
+int countPop = 0; //contador de generaci—n
+std::vector<Genetics::Individual>::iterator it;
 
 bool setup = false;
 bool named = false;
@@ -102,6 +111,12 @@ void onStart() {
 		if (!start) { //Crear Fuzzy
 			fuzzySpace::createFuzzy();
 			start = true;
+			if (onGA){
+				for (int i = 0; i < 92; ++i) {
+					ga.addVariable(13);
+				}
+				ga.generatePopulation(popSize);
+			}
 		}
 	}
 }
@@ -111,6 +126,19 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		arrived = false;
 		commands->changeView("narrow");
 		noCollisions = 0.0;
+		if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+			countInd++;
+			if (countInd > popSize){
+				ga.runGeneration(true);
+				countPop++;
+				for (std::vector<int>::iterator itvar = it->variables.begin(); itvar != it->variables.end(); ++itvar) {
+					//Effort
+					//changeMF("effort", "tired", );
+				}
+				countInd = 0;
+			}
+		}
+
 		// AQUI SE DEFINE LA POSICION A ENVIAR
 		if ((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
 			xinit = -20.0;
@@ -276,7 +304,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				strafePower = std::round(fuzzyOut[2]);
 			}
 			positionToGo = posAgent.front();
-			//std::cout << Game::GAME_TIME << ": Todo es difuso" << std::endl;
+			//std::cout << Game::GAME_TIME << "  es difuso" << std::endl;
 			//std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << std::endl;
 
 		}
@@ -460,7 +488,14 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				totalTime = Game::GAME_TIME - timeInit;
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				std::clog << "P1-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				std::cout << Game::GAME_TIME << " : Eval: " << 2000 + (800 - totalTime) + (std::abs(25000 - totalStamina) + (25000 - totalStamina)) + 0.01 * (25000 - totalStamina) - (100 * noCollisions) << std::endl;
+				double eval = 2000 + (800 - totalTime) + (std::abs(25000 - totalStamina) + (25000 - totalStamina)) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
+				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
+
+
+
+				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+
+				}
 				commands->say("END");
 			}
 
