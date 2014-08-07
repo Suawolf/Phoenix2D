@@ -411,15 +411,75 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 }
 /*!
  * Changes fuzzy Variables
- * Variable Name, a, b,c, d
+ * Stage Variable Name, a, b,c, d
+ * fStage1, fStage2Slow, fStage2Jogging, fStage2Sprint, fStage3Stay, fStage3Turn, fStage3Strafe;
  */
-void changeMF(string variable, string nameMF, double a, double b, double c, double d){
+void changeMF(int noStage, string variable, string nameMF, double a, double b, double c, double d){
+	switch (noStage){
+	case 1:
+		fStage1.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		break;
+	case 2:
+		fStage2Slow.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		fStage2Jogging.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		fStage2Sprint.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		break;
+	case 3:
+		fStage3Stay.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
+		break;
+	default:;
+
+	}
+
 	//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::Trapezoidal(double a, double b, double c, double d));
 
 }
-void changeMF(string variable, string nameMF, double a, double b){
-	//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
 
+/*!
+ * Changes fuzzy Variables
+ * Stage Variable Name, a, b,c, d, RampType True for Asc
+ * fStage1, fStage2Slow, fStage2Jogging, fStage2Sprint, fStage3Stay, fStage3Turn, fStage3Strafe;
+ */
+void changeMF(int noStage, string variable, string nameMF, double a, double b, bool rampType){
+	if (rampType){
+		switch (noStage){
+		case 1:
+			fStage1.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			break;
+		case 2:
+			fStage2Slow.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			fStage2Jogging.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			fStage2Sprint.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			break;
+		case 3:
+			fStage3Stay.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
+			break;
+		default:;
+			//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
+		}
+	} else {
+		switch (noStage){
+		case 1:
+			fStage1.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			break;
+		case 2:
+			fStage2Slow.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			fStage2Jogging.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			fStage2Sprint.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			break;
+		case 3:
+			fStage3Stay.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
+			break;
+		default:;
+			//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
+		}
+	}
 }
 }
 

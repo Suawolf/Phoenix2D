@@ -24,12 +24,12 @@
 namespace Prueba1 {
 
 //GA
-bool onGA = false; //Hacer False para anular GA
+bool onGA = true; //Hacer False para anular GA
 Genetics::GAlgorithm ga(0.8, 0.2);
 int popSize = 30;
 int countInd = -1; //contador de individuos
 int countPop = 0; //contador de generaci—n
-std::vector<Genetics::Individual>::iterator it;
+std::vector<Genetics::Individual>::iterator it; //Puntero al individuo actual que se esta evaluando
 
 bool setup = false;
 bool named = false;
@@ -116,6 +116,7 @@ void onStart() {
 					ga.addVariable(13);
 				}
 				ga.generatePopulation(popSize);
+				it = ga.begin(); //inicializado al primer individuo de la primera poblacion
 			}
 		}
 	}
@@ -127,15 +128,152 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		commands->changeView("narrow");
 		noCollisions = 0.0;
 		if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+			if (countInd > -1){
+				it++;
+			}
 			countInd++;
-			if (countInd > popSize){
+			if (countInd == popSize){
+				// Aqui tienes que accesar a los fits y elegir el mejor
+				double best_fit = -1.0;
+				std::vector<Genetics::Individual>::iterator it_best;
+				for (std::vector<Genetics::Individual>::iterator itind = ga.begin(); itind != ga.end(); ++itind) {
+					if (itind->fit > best_fit) {
+						it_best = itind;
+						best_fit = itind->fit;
+					}
+				}
+				for (std::vector<int>::iterator itvar = it_best->variables.begin(); itvar != it_best->variables.end(); ++itvar) {
+					std::clog << *itvar << ",";
+				}
 				ga.runGeneration(true);
 				countPop++;
-				std::vector<int> variable = it->variables; //De 0 a 91
-				//Define los valores de 0 a 91 en el orden, hay que escalarlos segun los rangos m‡ximos de cada variable
-				fuzzySpace::changeMF("effort", "tired", (double) (variable[0]) / 8192, (double) (variable[1]) / 8192);
 				countInd = 0;
+				it = ga.begin();
 			}
+			/* Esto loggeae el individuo que se esta evaluando
+			 for (std::vector<int>::iterator itvar = it->variables.begin(); itvar != it->variables.end(); ++itvar) {
+				std::clog << *it << ",";
+			}*/
+			std::clog << std::endl;
+			std::vector<int> variable = it->variables; //De 0 a 91
+			//Define los valores de 0 a 91 en el orden, hay que escalarlos segun los rangos m‡ximos de cada variable
+			//Effort Rango de 0 a 1  => / 8192
+			fuzzySpace::changeMF(1,"effort", "tired", (double) (variable[0]) / 8192,
+					(double) (variable[0] + variable[1] + 1) / 8192, false);
+			fuzzySpace::changeMF(1,"effort", "fresh", (double) (variable[2]) / 8192,
+					(double) (variable[2] + variable[3] + 1) / 8192, true);
+
+			//Stamina Rango de 0.0 a 8000.0 => * (8000.0 / 8192.0)
+			fuzzySpace::changeMF(1,"stamina", "critical", (double) (variable[4]) * (8000.0 / 8192.0),
+					(double) (variable[4] + variable[5] + 1) * (8000.0 / 8192.0), false);
+			fuzzySpace::changeMF(1,"stamina", "normal", (double) (variable[6]) * (8000.0 / 8192.0),
+					(double) (variable[6] + variable[7] + 1) * (8000.0 / 8192.0),
+					(double) (variable[6] + variable[7] + variable[8] + 1) * (8000.0 / 8192.0),
+					(double) (variable[6] + variable[7] + variable[8] + variable[9] + 2) * (8000.0 / 8192.0));
+			fuzzySpace::changeMF(1,"stamina", "high", (double) (variable[10]) * (8000.0 / 8192.0),
+					(double) (variable[10] + variable[11] + 1) * (8000.0 / 8192.0), true);
+
+			//INPUTS
+			//STAGE 1
+			//Distance Rango de 0.0 a 150.0 => * (150.0 / 8192.0)
+			fuzzySpace::changeMF(2,"distance", "vClose", (double) (variable[12]) * (8000.0 / 8192.0),
+					(double) (variable[12] + variable[13] + 1) * (8000.0 / 8192.0), false);
+			fuzzySpace::changeMF(2,"distance", "close", (double) (variable[14]) * (8000.0 / 8192.0),
+					(double) (variable[14] + variable[15] + 1) * (8000.0 / 8192.0),
+					(double) (variable[14] + variable[15] + variable[16] + 1) * (8000.0 / 8192.0),
+					(double) (variable[14] + variable[15] + variable[16] + variable[17] + 2) * (8000.0 / 8192.0));
+			fuzzySpace::changeMF(2,"distance", "far", (double) (variable[18]) * (8000.0 / 8192.0),
+					(double) (variable[18] + variable[19] + 1) * (8000.0 / 8192.0), true);
+
+			//STAGE 2
+			//relSpeed Rango de -4.0 a 4.0 => * (8.0 / 8192.0) - 4.0
+			fuzzySpace::changeMF(2,"relSpeed", "away", (double) (variable[20]) * (8.0 / 8192.0) - 4.0,
+					(double) (variable[20] + variable[21] + 1) * (8.0 / 8192.0) - 4.0, false);
+			fuzzySpace::changeMF(2,"relSpeed", "slow", (double) (variable[22]) * (8.0 / 8192.0) - 4.0,
+					(double) (variable[22] + variable[23] + 1) * (8.0 / 8192.0) - 4.0,
+					(double) (variable[22] + variable[23] + variable[24] + 1) * (8.0 / 8192.0) - 4.0,
+					(double) (variable[22] + variable[23] + variable[24] + variable[25] + 2) * (8.0 / 8192.0) - 4.0);
+			fuzzySpace::changeMF(2,"relSpeed", "fast", (double) (variable[26]) * (8.0 / 8192.0) - 4.0,
+					(double) (variable[26] + variable[27] + 1) * (8.0 / 8192.0) - 4.0, true);
+
+			//STAGE 3
+			//Direction -90.0 a 90.0 => * (180.0 / 8192.0) - 90.0
+			fuzzySpace::changeMF(3,"direction", "farLeft", (double) (variable[28]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[28] + variable[29] + 1) * (180.0 / 8192.0) - 90.0, false);
+			fuzzySpace::changeMF(3,"direction", "left", (double) (variable[30]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[30] + variable[31] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[30] + variable[31] + variable[32] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[30] + variable[31] + variable[32] + variable[33] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"direction", "center", (double) (variable[34]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[34] + variable[35] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[34] + variable[35] + variable[36] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[34] + variable[35] + variable[36] + variable[37] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"direction", "right", (double) (variable[38]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[38] + variable[39] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[38] + variable[39] + variable[40] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[38] + variable[39] + variable[40] + variable[41] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"direction", "farRight", (double) (variable[42]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[42] + variable[43] + 1) * (180.0 / 8192.0) - 90.0, true);
+
+			//AngSpeed -180.0 a 180 => * (360.0 / 8192.0) - 180.0
+			fuzzySpace::changeMF(3,"angSpeed", "toLeft", (double) (variable[44]) * (360.0 / 8192.0) - 180.0,
+					(double) (variable[44] + variable[45] + 1) * (360.0 / 8192.0) - 180.0, false);
+			fuzzySpace::changeMF(3,"angSpeed", "static", (double) (variable[46]) * (360.0 / 8192.0) - 180.0,
+					(double) (variable[46] + variable[47] + 1) * (360.0 / 8192.0) - 180.0,
+					(double) (variable[46] + variable[47] + variable[48] + 1) * (360.0 / 8192.0) - 180.0,
+					(double) (variable[46] + variable[47] + variable[48] + variable[49] + 2) * (360.0 / 8192.0) - 180.0);
+			fuzzySpace::changeMF(3,"angSpeed", "toRight", (double) (variable[50]) * (360.0 / 8192.0) - 180.0,
+					(double) (variable[50] + variable[51] + 1) * (360.0 / 8192.0) - 180.0, true);
+
+			//OUTPUTS
+			//dash 0.0 a 100.0 => * (100.0 / 8192.0)
+			fuzzySpace::changeMF(1,"dash", "walk", (double) (variable[52]) * (100.0 / 8192.0),
+					(double) (variable[52] + variable[53] + 1) * (100.0 / 8192.0), false);
+			fuzzySpace::changeMF(1,"dash", "jogging", (double) (variable[54]) * (100.0 / 8192.0),
+					(double) (variable[54] + variable[55] + 1) * (100.0 / 8192.0),
+					(double) (variable[54] + variable[55] + variable[56] + 1) * (100.0 / 8192.0),
+					(double) (variable[54] + variable[55] + variable[56] + variable[57] + 2) * (100.0 / 8192.0));
+			fuzzySpace::changeMF(1,"dash", "sprint", (double) (variable[58]) * (100.0 / 8192.0),
+					(double) (variable[58] + variable[59] + 1) * (100.0 / 8192.0), true);
+
+			//turn -90.0 a 90.0 => * (180.0 / 8192.0) - 90.0
+			fuzzySpace::changeMF(3,"turn", "hLeft", (double) (variable[60]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[60] + variable[61] + 1) * (180.0 / 8192.0) - 90.0, false);
+			fuzzySpace::changeMF(3,"turn", "left", (double) (variable[62]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[62] + variable[63] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[62] + variable[63] + variable[64] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[62] + variable[63] + variable[64] + variable[65] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"turn", "straight", (double) (variable[66]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[66] + variable[67] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[66] + variable[67] + variable[68] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[66] + variable[67] + variable[68] + variable[69] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"turn", "right", (double) (variable[70]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[70] + variable[71] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[70] + variable[71] + variable[72] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[70] + variable[71] + variable[72] + variable[73] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"turn", "hRight", (double) (variable[74]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[74] + variable[75] + 1) * (180.0 / 8192.0) - 90.0, true);
+
+			//strafe -90.0 a 90.0 => * (180.0 / 8192.0) - 90.0
+			fuzzySpace::changeMF(3,"strafe", "aLeft", (double) (variable[76]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[76] + variable[77] + 1) * (180.0 / 8192.0) - 90.0, false);
+			fuzzySpace::changeMF(3,"strafe", "dLeft", (double) (variable[78]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[78] + variable[79] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[78] + variable[79] + variable[80] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[78] + variable[79] + variable[80] + variable[81] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"strafe", "face", (double) (variable[82]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[82] + variable[83] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[82] + variable[83] + variable[84] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[82] + variable[83] + variable[84] + variable[85] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"strafe", "dRight", (double) (variable[86]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[86] + variable[87] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[86] + variable[87] + variable[88] + 1) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[86] + variable[87] + variable[88] + variable[89] + 2) * (180.0 / 8192.0) - 90.0);
+			fuzzySpace::changeMF(3,"strafe", "aRight", (double) (variable[90]) * (180.0 / 8192.0) - 90.0,
+					(double) (variable[90] + variable[91] + 1) * (180.0 / 8192.0) - 90.0, true);
+
+
+			countInd = 0;
 		}
 
 		// AQUI SE DEFINE LA POSICION A ENVIAR
@@ -482,17 +620,23 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			}
 
 			//EVALUA TERMINA CICLO
+			if ((Game::GAME_TIME - timeInit) > 1200){
+				expDone = true;
+			}
 			if(expDone){
 				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 				totalTime = Game::GAME_TIME - timeInit;
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				std::clog << "P1-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				double eval = 2000 + (800 - totalTime) + (std::abs(25000 - totalStamina) + (25000 - totalStamina)) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
+				if ((eval < 1.0) || (totalTime > 1200.0)){
+					eval = 1.0;
+				}
 				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
 				std::clog << "P1-" << noExp << " : Eval: " << eval << std::endl;
 
 				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
-
+					it->fit = eval;
 				}
 				commands->say("END");
 			}

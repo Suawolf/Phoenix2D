@@ -15,8 +15,8 @@ using namespace std;
 namespace fuzzySpace {
 void createFuzzy();
 vector<double> obtainOut(double yLocation, double effort, double stamina, double distance, double relSpeed, double direction, double angSpeed);
-void changeMF(string variable, string nameMF, double a, double b, double c, double d);
-void changeMF(string variable, string nameMF, double a, double b);
+void changeMF(int noStage, string variable, string nameMF, double a, double b, double c, double d);
+void changeMF(int noStage, string variable, string nameMF, double a, double b, bool rampType);
 }
 
 
