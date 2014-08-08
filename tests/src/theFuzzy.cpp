@@ -345,7 +345,7 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 
 	//AQUI COLOCA PROCESO DE SALIDA DE STAGE 1
 	double winner1 = 0.0;
-	string theWinner1 = "";
+	string theWinner1 = "sprint";
 	for (std::vector<FRule>::iterator it = fStage1.begin(); it != fStage1.end(); ++it) {
 		it->evaluate(effort, stamina);
 		//std::cout << it->getOutputName() << " is " << it->getOutputSet() << " with " << it->getOutput() << std::endl;
@@ -363,7 +363,7 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 
 
 	//STAGE 2
-	if (!theWinner1.compare("slow")){ //Stage1 = slow
+	if (!theWinner1.compare("walk")){ //Stage1 = slow
 		fStage2 = &fStage2Slow;
 	} else if (!theWinner1.compare("jogging")){ //Stage1 = jogging
 		fStage2 = &fStage2Jogging;
@@ -372,7 +372,7 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 	}
 	//AQUI COLOCA EL PROCESO DEL STAGE 2
 	double winner2 = 0.0;
-	string theWinner2 = "";
+	string theWinner2 = "turn";
 	for (std::vector<FRule>::iterator it = fStage2->begin(); it != fStage2->end(); ++it) {
 		it->evaluate(distance, relSpeed);
 		//std::cout << it->getOutputName() << " is " << it->getOutputSet() << " with " << it->getOutput() << std::endl;
@@ -395,7 +395,7 @@ std::vector<double> obtainOut(double yLocation, double effort, double stamina, d
 	std::map<std::string, double> inputs3;
 	inputs3["direction"] = direction;
 	inputs3["angSpeed"] = angSpeed;
-	std::map<std::string, double> outputs3 = fStage3->evaluate(inputs);
+	std::map<std::string, double> outputs3 = fStage3->evaluate(inputs3);
 	turnAng = outputs3["turn"];
 	strafeAng = outputs3["strafe"];
 
@@ -429,7 +429,8 @@ void changeMF(int noStage, string variable, string nameMF, double a, double b, d
 		fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
 		fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::Trapezoidal(a, b, c, d));
 		break;
-	default:;
+	default:
+		break;
 
 	}
 
@@ -458,7 +459,8 @@ void changeMF(int noStage, string variable, string nameMF, double a, double b, b
 			fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
 			fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampAsc(a, b));
 			break;
-		default:;
+		default:
+			break;
 			//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
 		}
 	} else {
@@ -476,7 +478,8 @@ void changeMF(int noStage, string variable, string nameMF, double a, double b, b
 			fStage3Turn.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
 			fStage3Strafe.getVariable(variable)->addMembershipFunction(nameMF, new Math::RampDesc(a, b));
 			break;
-		default:;
+		default:
+			break;
 			//al engine le pongo=> engine.getVariable(string variable)->addMembershipFunction(string nameMF,new Math::RampDesc(double a, double b));
 		}
 	}

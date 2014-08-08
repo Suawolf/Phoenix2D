@@ -128,6 +128,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 		commands->changeView("narrow");
 		noCollisions = 0.0;
 		if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+			//std::cout << "En BKO" << std::endl;
 			if (countInd > -1){
 				it++;
 			}
@@ -143,7 +144,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 					}
 				}
 				for (std::vector<int>::iterator itvar = it_best->variables.begin(); itvar != it_best->variables.end(); ++itvar) {
-					std::clog << *itvar << ",";
+					//std::clog << *itvar << ",";
 				}
 				ga.runGeneration(true);
 				countPop++;
@@ -154,14 +155,21 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			 for (std::vector<int>::iterator itvar = it->variables.begin(); itvar != it->variables.end(); ++itvar) {
 				std::clog << *it << ",";
 			}*/
-			std::clog << std::endl;
+			//std::clog << std::endl;
 			std::vector<int> variable = it->variables; //De 0 a 91
+
+			for (int i = 0; i < 92; i++){
+				std::clog << variable[i] << ", ";
+			}
+			std::clog << std::endl;
 			//Define los valores de 0 a 91 en el orden, hay que escalarlos segun los rangos m‡ximos de cada variable
-			//Effort Rango de 0 a 1  => / 8192
-			fuzzySpace::changeMF(1,"effort", "tired", (double) (variable[0]) / 8192,
-					(double) (variable[0] + variable[1] + 1) / 8192, false);
-			fuzzySpace::changeMF(1,"effort", "fresh", (double) (variable[2]) / 8192,
-					(double) (variable[2] + variable[3] + 1) / 8192, true);
+			//INPUTS
+			//STAGE 1
+			//Effort Rango de 0 a 1  => / 8192.0
+			fuzzySpace::changeMF(1,"effort", "tired", (double) (variable[0]) / 8192.0,
+					(double) (variable[0] + variable[1] + 1) / 8192.0, false);
+			fuzzySpace::changeMF(1,"effort", "fresh", (double) (variable[2]) / 8192.0,
+					(double) (variable[2] + variable[3] + 1) / 8192.0, true);
 
 			//Stamina Rango de 0.0 a 8000.0 => * (8000.0 / 8192.0)
 			fuzzySpace::changeMF(1,"stamina", "critical", (double) (variable[4]) * (8000.0 / 8192.0),
@@ -173,8 +181,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			fuzzySpace::changeMF(1,"stamina", "high", (double) (variable[10]) * (8000.0 / 8192.0),
 					(double) (variable[10] + variable[11] + 1) * (8000.0 / 8192.0), true);
 
-			//INPUTS
-			//STAGE 1
+			//STAGE 2
 			//Distance Rango de 0.0 a 150.0 => * (150.0 / 8192.0)
 			fuzzySpace::changeMF(2,"distance", "vClose", (double) (variable[12]) * (8000.0 / 8192.0),
 					(double) (variable[12] + variable[13] + 1) * (8000.0 / 8192.0), false);
@@ -185,7 +192,6 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			fuzzySpace::changeMF(2,"distance", "far", (double) (variable[18]) * (8000.0 / 8192.0),
 					(double) (variable[18] + variable[19] + 1) * (8000.0 / 8192.0), true);
 
-			//STAGE 2
 			//relSpeed Rango de -4.0 a 4.0 => * (8.0 / 8192.0) - 4.0
 			fuzzySpace::changeMF(2,"relSpeed", "away", (double) (variable[20]) * (8.0 / 8192.0) - 4.0,
 					(double) (variable[20] + variable[21] + 1) * (8.0 / 8192.0) - 4.0, false);
@@ -393,8 +399,8 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			//std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << std::endl;
 			//std::cout << Game::GAME_TIME << ": distance: " << distance  << " Relative Speed: " << relSpeed << std::endl;
 			//std::cout << Game::GAME_TIME << ": direction: " << direction  << " Angular Speed: " << angSpeed << std::endl;
-
 			fuzzyOut = fuzzySpace::obtainOut(yLoc, effort, stamina, distance, relSpeed, direction, angSpeed);
+			//std::cout << "En PO" << std::endl; //Todo check when fault
 			if (fuzzyOut[0] > 100.0){
 				dashPower = 100.0;
 			} else {
@@ -634,6 +640,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				}
 				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
 				std::clog << "P1-" << noExp << " : Eval: " << eval << std::endl;
+
 
 				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
 					it->fit = eval;
