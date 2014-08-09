@@ -22,6 +22,7 @@
 #define GALGORITHM_HPP_
 
 #include <vector>
+#include <string>
 
 namespace Genetics {
 
@@ -90,10 +91,11 @@ public:
 	~GAlgorithm();
 	void addVariable(int bits);
 	void generatePopulation(int size);
+	void loadPopulation(std::string filename);
 	void runGeneration(bool per_individual = false);
 	std::vector<Individual>::iterator begin();
 	std::vector<Individual>::iterator end();
-	std::vector<Individual> getGeneration();
+	int getGenerations();
 private:
 	int max_var_size;
 	double p_cross;

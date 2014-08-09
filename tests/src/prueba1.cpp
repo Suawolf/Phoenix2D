@@ -157,6 +157,7 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			}*/
 			//std::clog << std::endl;
 			std::vector<int> variable = it->variables; //De 0 a 91
+			std::clog << "P1-," << ++noExp << "," ;
 
 			for (int i = 0; i < 92; i++){
 				std::clog << variable[i] << ", ";
@@ -277,9 +278,6 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 					(double) (variable[86] + variable[87] + variable[88] + variable[89] + 2) * (180.0 / 8192.0) - 90.0);
 			fuzzySpace::changeMF(3,"strafe", "aRight", (double) (variable[90]) * (180.0 / 8192.0) - 90.0,
 					(double) (variable[90] + variable[91] + 1) * (180.0 / 8192.0) - 90.0, true);
-
-
-			countInd = 0;
 		}
 
 		// AQUI SE DEFINE LA POSICION A ENVIAR
@@ -633,13 +631,13 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 				totalTime = Game::GAME_TIME - timeInit;
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				std::clog << "P1-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				double eval = 2000 + (800 - totalTime) + (std::abs(25000 - totalStamina) + (25000 - totalStamina)) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
+				std::clog << "P1-," << noExp << ",: Team: ,"<< Self::TEAM_NAME <<", Sta: ," << totalStamina << ", Time:  ," << totalTime <<  ", Coll: ," << noCollisions << std::endl;
+				double eval = 2000 + (800 - totalTime) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
 				if ((eval < 1.0) || (totalTime > 1200.0)){
 					eval = 1.0;
 				}
 				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
-				std::clog << "P1-" << noExp << " : Eval: " << eval << std::endl;
+				std::clog << "P1-," << noExp << ",: Eval: ," << eval << std::endl;
 
 
 				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
