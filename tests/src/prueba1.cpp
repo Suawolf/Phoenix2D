@@ -50,7 +50,7 @@ double prevDistance = -1.0;
 double prevAngle = 1000.0;
 double timePAng = 0.0;
 double timePDist = 0.0;
-//bool turnTime = true;
+bool turnTime = true;
 
  //METRICS
 double noCollisions;
@@ -456,7 +456,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		//std::cout << Game::GAME_TIME << ": Waypoint X: " << posAgent.front().x << " Y: " << posAgent.front().y << " Dir: " << p->getDirectionTo(&posAgent.front()) << std::endl << std::endl;
 
 
-		//turnTime = (Game::GAME_TIME % 3);
+		turnTime = (Game::GAME_TIME % 3);
 	}else if(!Self::TEAM_NAME.compare("Potential")){
 		if (!named) { //Bautizo
 			std::cout << "Soy Potential Fields " << std::endl;
@@ -568,8 +568,8 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		if (d > thrDis) {
 			arrived = false;
 			double dir = p->getDirectionTo(&positionToGo);
-			if ((fabs(dir + (turnAngle))) > 10.0) { //Cambiar precisi—n
-				commands->turn(dir + (turnAngle));
+			if ((fabs(dir + (turnAngle * turnTime))) > 10.0) { //Cambiar precisi—n
+				commands->turn(dir + (turnAngle * turnTime));
 				//DEBUGGING QUITAR LUEGO
 				//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
 				//	std::cout << "Turning" << std::endl;
