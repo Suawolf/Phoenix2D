@@ -46,8 +46,11 @@ double xinit, yinit;
 int noLaps;
 
 //FUZZY
+double lowSta = 2600.0;
+double highSta = 6000.0;
 double prevDistance = -1.0;
 double prevAngle = 1000.0;
+double prevStamina = 8000.0;
 double timePAng = 0.0;
 double timePDist = 0.0;
 bool turnTime = true;
@@ -115,7 +118,8 @@ void onStart() {
 				for (int i = 0; i < 92; ++i) {
 					ga.addVariable(13);
 				}
-				ga.generatePopulation(popSize);
+				//ga.generatePopulation(popSize);
+				ga.loadPopulation("data.txt");
 				it = ga.begin(); //inicializado al primer individuo de la primera poblacion
 			}
 		}
@@ -182,16 +186,19 @@ void executeBeforeKickOff(WorldModel worldModel, std::vector<Message> messages, 
 			fuzzySpace::changeMF(1,"stamina", "high", (double) (variable[10]) * (8000.0 / 8192.0),
 					(double) (variable[10] + variable[11] + 1) * (8000.0 / 8192.0), true);
 
+			lowSta = (variable[4] + variable[5] + 1) * (8000.0 / 8192.0);
+			highSta = (variable[10] + variable[11] + 1) * (8000.0 / 8192.0);
+
 			//STAGE 2
 			//Distance Rango de 0.0 a 150.0 => * (150.0 / 8192.0)
-			fuzzySpace::changeMF(2,"distance", "vClose", (double) (variable[12]) * (8000.0 / 8192.0),
-					(double) (variable[12] + variable[13] + 1) * (8000.0 / 8192.0), false);
-			fuzzySpace::changeMF(2,"distance", "close", (double) (variable[14]) * (8000.0 / 8192.0),
-					(double) (variable[14] + variable[15] + 1) * (8000.0 / 8192.0),
-					(double) (variable[14] + variable[15] + variable[16] + 1) * (8000.0 / 8192.0),
-					(double) (variable[14] + variable[15] + variable[16] + variable[17] + 2) * (8000.0 / 8192.0));
-			fuzzySpace::changeMF(2,"distance", "far", (double) (variable[18]) * (8000.0 / 8192.0),
-					(double) (variable[18] + variable[19] + 1) * (8000.0 / 8192.0), true);
+			fuzzySpace::changeMF(2,"distance", "vClose", (double) (variable[12]) * (150.0 / 8192.0),
+					(double) (variable[12] + variable[13] + 1) * (150.0 / 8192.0), false);
+			fuzzySpace::changeMF(2,"distance", "close", (double) (variable[14]) * (150.0 / 8192.0),
+					(double) (variable[14] + variable[15] + 1) * (150.0 / 8192.0),
+					(double) (variable[14] + variable[15] + variable[16] + 1) * (150.0 / 8192.0),
+					(double) (variable[14] + variable[15] + variable[16] + variable[17] + 2) * (150.0 / 8192.0));
+			fuzzySpace::changeMF(2,"distance", "far", (double) (variable[18]) * (150.0 / 8192.0),
+					(double) (variable[18] + variable[19] + 1) * (150.0 / 8192.0), true);
 
 			//relSpeed Rango de -4.0 a 4.0 => * (8.0 / 8192.0) - 4.0
 			fuzzySpace::changeMF(2,"relSpeed", "away", (double) (variable[20]) * (8.0 / 8192.0) - 4.0,
@@ -330,6 +337,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 	setup = false;
 
 	if(!Self::TEAM_NAME.compare("Fuzzy")){
+		turnTime = (Game::GAME_TIME % 2);
 		if (!named) { //Bautizo
 			std::cout << "Soy Fuzzy" << std::endl;
 			named = true;
@@ -371,8 +379,15 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			Position *oppPos = opponents[0]->getPosition();
 
 			double yLoc = p->y;
-			double effort = Self::EFFORT;
+			double staDen = fabs(Self::STAMINA - prevStamina);
+			if(!staDen){
+				staDen = -1.0;
+			}
+			double effort = ((Self::STAMINA - prevStamina) / staDen)*Self::EFFORT;
+			//double effort = Self::EFFORT;
 			double stamina = Self::STAMINA;
+
+
 			double distance =  p->getDistanceTo(oppPos);
 			double relSpeed;
 			if (prevDistance == -1.0){
@@ -382,6 +397,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			}
 
 			prevDistance = distance;
+
 
 			double direction = p->getDirectionTo(oppPos);
 			double angSpeed;
@@ -394,33 +410,35 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			prevAngle = direction;
 			timePAng = timePDist = Game::GAME_TIME;
 
-			//std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << std::endl;
+
+			//std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << "prevStamina: " << prevStamina << std::endl;
 			//std::cout << Game::GAME_TIME << ": distance: " << distance  << " Relative Speed: " << relSpeed << std::endl;
 			//std::cout << Game::GAME_TIME << ": direction: " << direction  << " Angular Speed: " << angSpeed << std::endl;
+			if ((stamina <= lowSta)||(stamina >= highSta)) {
+				prevStamina = stamina;
+			} else if (distance < 15.0){
+				prevStamina = 8000.0;
+			}
+
 			fuzzyOut = fuzzySpace::obtainOut(yLoc, effort, stamina, distance, relSpeed, direction, angSpeed);
 			if (fuzzyOut[0] > 100.0){
 				dashPower = 100.0;
 			} else {
-				dashPower = fuzzyOut[0];
+				dashPower = round(fuzzyOut[0]);
 			}
 
-			if (std::abs(fuzzyOut[1]) < 1.0){
-				turnAngle = 0.0;
-			} else {
-				turnAngle = fuzzyOut[1];
-			}
 
 			turnAngle = round(fuzzyOut[1]);
 
 			strafePower = round(fuzzyOut[2]);
 
 			//turnAngle = turnAngle + p->getDirectionTo(&posAgent.front());
-			turnAngle = p->getDirectionTo(&posAgent.front());
+			//turnAngle = p->getDirectionTo(&posAgent.front());
 
 			//Geometry::Vector2D fuzzyGo(p->getDistanceTo(&posAgent.front()), Geometry::toRadians(turnAngle), true);
 			//fuzzyPosition = Position((double) (fuzzyGo.dx + p->x), (double) (fuzzyGo.dy + p->y));
 
-			//std::cout << Game::GAME_TIME << ": FDash: " << fuzzyOut[0] << " Turn: " << fuzzyOut[1] << " Straf: " << fuzzyOut[2] << std::endl;
+			//std::cout << Game::GAME_TIME << ": FDash: " << fuzzyOut[0] << " Turn: " << fuzzyOut[1] << " Straf: " << fuzzyOut[2] << " turnTime: "<< turnTime << std::endl;
 			//std::cout << Game::GAME_TIME << ": DistoGoal: " << p->getDistanceTo(&posAgent.front()) << " DirtoGoal: " << p->getDirectionTo(&posAgent.front()) << std::endl;
 			//std::cout << Game::GAME_TIME << ": Fuzzy X: " << fuzzyGo.dx << " Y: " << fuzzyGo.dy << std::endl;
 
@@ -430,33 +448,38 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		} else { //NO ve oponentes, va al objetivo directamente
 			//std::cout << "NO hay moros en la costa" << std::endl;
 			double yLoc = p->y;
-			double effort = Self::EFFORT;
+			double staDen = fabs(Self::STAMINA - prevStamina);
+			if(!staDen){
+				staDen = -1.0;
+			}
+			double effort = ((Self::STAMINA - prevStamina) / staDen)*Self::EFFORT;
+			//double effort = Self::EFFORT;
 			double stamina = Self::STAMINA;
+
+			if ((stamina <= lowSta)||(stamina >= highSta)) {
+				prevStamina = stamina;
+			}
+
 			fuzzyOut = fuzzySpace::obtainOut(yLoc, effort, stamina, 150.0, -4.0, 0.0, 0.0);
 			if (fuzzyOut[0] > 100.0){
 				dashPower = 100.0;
 			} else {
 				dashPower = round(fuzzyOut[0]);
 			}
-			if (std::abs(fuzzyOut[2]) < 1.0){
-				strafePower = 0.0;
-			} else {
-				strafePower = round(fuzzyOut[2]);
-			}
+			strafePower = round(fuzzyOut[2]);
+			turnAngle = 0.0;
+			turnTime = true;
 			positionToGo = posAgent.front();
 			//std::cout << Game::GAME_TIME << "  es difuso" << std::endl;
 			//std::cout << Game::GAME_TIME << ": yLoc: " << yLoc  << " effort: " << effort << " stamina: " << stamina << std::endl;
 
 		}
 
-
+		//std::cout << Game::GAME_TIME << ": FDash: " << fuzzyOut[0] << " Turn: " << fuzzyOut[1] << " Straf: " << fuzzyOut[2] << " turnTime: "<< turnTime << std::endl;
 		//std::cout << Game::GAME_TIME << ": Dash: " << dashPower  << " Turn: " << turnAngle << " Strafe: " << strafePower << std::endl;
 		//std::cout << Game::GAME_TIME << ": Estoy en X: " << p->x << " Y: " << p->y << std::endl;
 		//std::cout << Game::GAME_TIME <<  ": Debo ir a X: " << positionToGo.x << " Y: " << positionToGo.y << " Dir: " << p->getDirectionTo(&positionToGo) << std::endl;
 		//std::cout << Game::GAME_TIME << ": Waypoint X: " << posAgent.front().x << " Y: " << posAgent.front().y << " Dir: " << p->getDirectionTo(&posAgent.front()) << std::endl << std::endl;
-
-
-		turnTime = (Game::GAME_TIME % 3);
 	}else if(!Self::TEAM_NAME.compare("Potential")){
 		if (!named) { //Bautizo
 			std::cout << "Soy Potential Fields " << std::endl;
@@ -568,11 +591,11 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		if (d > thrDis) {
 			arrived = false;
 			double dir = p->getDirectionTo(&positionToGo);
-			if ((fabs(dir + (turnAngle * turnTime))) > 10.0) { //Cambiar precisi—n
-				commands->turn(dir + (turnAngle * turnTime));
+			if ((fabs(dir + turnAngle)) * turnTime > 10.0) { //Cambiar precisi—n
+				commands->turn((dir + turnAngle) * turnTime);
 				//DEBUGGING QUITAR LUEGO
 				//if((!Self::TEAM_NAME.compare("Fuzzy"))||(!Self::TEAM_NAME.compare("Potential"))){
-				//	std::cout << "Turning" << std::endl;
+				//	std::cout << "Turning " << (dir + turnAngle) * turnTime << " dir: " << dir << std::endl;
 				//}
 			} else {
 				commands->dash(dashPower, strafePower);
@@ -623,8 +646,11 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 			}
 
 			//EVALUA TERMINA CICLO
-			if ((Game::GAME_TIME - timeInit) > 1200){
-				expDone = true;
+			//ACOMODAR QUE SOLO FUZZY LO HAGA
+			if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+				if ((Game::GAME_TIME - timeInit) > 1200){
+					expDone = true;
+				}
 			}
 			if(expDone){
 				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
@@ -632,7 +658,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
 				std::clog << "P1-," << noExp << ",: Team: ,"<< Self::TEAM_NAME <<", Sta: ," << totalStamina << ", Time:  ," << totalTime <<  ", Coll: ," << noCollisions << std::endl;
 				double eval = 2000 + (800 - totalTime) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
-				if ((eval < 1.0) || (totalTime > 1200.0)){
+				if ((eval < 1.0) || (totalTime >= 1200.0)){
 					eval = 1.0;
 				}
 				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;

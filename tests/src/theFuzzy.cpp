@@ -27,307 +27,310 @@ FEngine *fStage2, *fStage3;
  */
 void createFuzzy(){
 
-		//INPUTS
-		//STAGE 1
-		v = new FVariable("effort", 0.0, 1.0);
-		v->addMembershipFunction("tired",       new Math::RampDesc(0.99, 1.0));
-		v->addMembershipFunction("fresh",       new Math::RampAsc(0.99, 1.0));
-		fStage1.addVariable(v);
+	//INPUTS
+	//STAGE 1
+	v = new FVariable("effort", -1.0, 1.0);
+	v->addMembershipFunction("tired",       new Math::RampDesc(0.5, 0.9));
+	v->addMembershipFunction("fresh",       new Math::RampAsc(0.75, 0.9));
+	//v = new FVariable("effort", 0.0, 1.0);
+	//v->addMembershipFunction("tired",       new Math::RampDesc(0.99, 1.0));
+	//v->addMembershipFunction("fresh",       new Math::RampAsc(0.99, 1.0));
+	fStage1.addVariable(v);
 
-		v = new FVariable("stamina", 0.0, 8000.0);
-		v->addMembershipFunction("critical",    new Math::RampDesc(2700.0, 3000.0));
-		v->addMembershipFunction("normal",      new Math::Trapezoidal(2950.0, 4850.0, 6000.0, 7000.0));
-		v->addMembershipFunction("high",        new Math::RampAsc(6000.0, 7000.0));
-		fStage1.addVariable(v);
+	v = new FVariable("stamina", 0.0, 8000.0);
+	v->addMembershipFunction("critical",    new Math::RampDesc(2500.0, 2600.0));
+	v->addMembershipFunction("normal",      new Math::Trapezoidal(2550.0, 2600.0, 5950.0, 6000.0));
+	v->addMembershipFunction("high",        new Math::RampAsc(5950.0, 6000.0));
+	fStage1.addVariable(v);
 
-		//STAGE 2
-		v = new FVariable("distance", 0.0, 150.0);
-		v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
-		v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 13.0));
-		v->addMembershipFunction("far",         new Math::RampAsc(10.0, 13.0));
-		fStage2Slow.addVariable(v);
-		v = new FVariable("distance", 0.0, 150.0);
-		v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
-		v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 13.0));
-		v->addMembershipFunction("far",         new Math::RampAsc(10.0, 13.0));
-		fStage2Jogging.addVariable(v);
-		v = new FVariable("distance", 0.0, 150.0);
-		v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
-		v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 13.0));
-		v->addMembershipFunction("far",         new Math::RampAsc(10.0, 13.0));
-		fStage2Sprint.addVariable(v);
+	//STAGE 2
+	v = new FVariable("distance", 0.0, 150.0);
+	v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
+	v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 15.0));
+	v->addMembershipFunction("far",         new Math::RampAsc(10.0, 15.0));
+	fStage2Slow.addVariable(v);
+	v = new FVariable("distance", 0.0, 150.0);
+	v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
+	v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 15.0));
+	v->addMembershipFunction("far",         new Math::RampAsc(10.0, 15.0));
+	fStage2Jogging.addVariable(v);
+	v = new FVariable("distance", 0.0, 150.0);
+	v->addMembershipFunction("vClose",  	new Math::RampDesc(2.0, 5.0));
+	v->addMembershipFunction("close",       new Math::Trapezoidal(2.0, 5.0, 10.0, 15.0));
+	v->addMembershipFunction("far",         new Math::RampAsc(10.0, 15.0));
+	fStage2Sprint.addVariable(v);
 
-		v = new FVariable("relSpeed", -4.0, 4.0);
-		v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
-		v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
-		v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
-		fStage2Slow.addVariable(v);
-		v = new FVariable("relSpeed", -4.0, 4.0);
-		v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
-		v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
-		v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
-		fStage2Jogging.addVariable(v);
-		v = new FVariable("relSpeed", -4.0, 4.0);
-		v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
-		v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
-		v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
-		fStage2Sprint.addVariable(v);
+	v = new FVariable("relSpeed", -4.0, 4.0);
+	v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
+	v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
+	v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
+	fStage2Slow.addVariable(v);
+	v = new FVariable("relSpeed", -4.0, 4.0);
+	v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
+	v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
+	v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
+	fStage2Jogging.addVariable(v);
+	v = new FVariable("relSpeed", -4.0, 4.0);
+	v->addMembershipFunction("away",        new Math::RampDesc(-0.1, 0.0));
+	v->addMembershipFunction("slow",        new Math::Trapezoidal(-0.1, 0.0, 0.5, 1.0));
+	v->addMembershipFunction("fast",        new Math::RampAsc(1.0, 2.0));
+	fStage2Sprint.addVariable(v);
 
-		//STAGE 3
-		v = new FVariable("direction", -90.0, 90.0);
-		v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
-		v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
-		v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
-		fStage3Stay.addVariable(v);
-		v = new FVariable("direction", -90.0, 90.0);
-		v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
-		v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
-		v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
-		fStage3Turn.addVariable(v);
-		v = new FVariable("direction", -90.0, 90.0);
-		v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
-		v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
-		v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
-		fStage3Strafe.addVariable(v);
+	//STAGE 3
+	v = new FVariable("direction", -90.0, 90.0);
+	v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
+	v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
+	v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
+	fStage3Stay.addVariable(v);
+	v = new FVariable("direction", -90.0, 90.0);
+	v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
+	v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
+	v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
+	fStage3Turn.addVariable(v);
+	v = new FVariable("direction", -90.0, 90.0);
+	v->addMembershipFunction("farLeft",    	new Math::RampDesc(-50.0, -25.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-50.0, -25.0, -25.0, 0.0));
+	v->addMembershipFunction("center",      new Math::Trapezoidal(-25.0, 0.0, 0.0, 25.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 25.0, 25.0, 50.0));
+	v->addMembershipFunction("farRight",  	new Math::RampAsc(25.0, 50.0));
+	fStage3Strafe.addVariable(v);
 
-		v = new FVariable("angSpeed", -180.0, 180.0);
-		v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
-		v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
-		v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
-		fStage3Stay.addVariable(v);
-		v = new FVariable("angSpeed", -180.0, 180.0);
-		v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
-		v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
-		v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
-		fStage3Turn.addVariable(v);
-		v = new FVariable("angSpeed", -180.0, 180.0);
-		v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
-		v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
-		v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
-		fStage3Strafe.addVariable(v);
+	v = new FVariable("angSpeed", -180.0, 180.0);
+	v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
+	v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
+	v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
+	fStage3Stay.addVariable(v);
+	v = new FVariable("angSpeed", -180.0, 180.0);
+	v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
+	v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
+	v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
+	fStage3Turn.addVariable(v);
+	v = new FVariable("angSpeed", -180.0, 180.0);
+	v->addMembershipFunction("toLeft",     	new Math::RampDesc(-2.0, 0.0));
+	v->addMembershipFunction("static",      new Math::Trapezoidal(-2.0, 0.0, 0.0, 2.0));
+	v->addMembershipFunction("toRight",    	new Math::RampAsc(0.0, 2.0));
+	fStage3Strafe.addVariable(v);
 
-		//OUTPUTS
-		v = new FVariable("dash", 0.0, 200.0);
-		v->addMembershipFunction("walk",        new Math::RampDesc(10.0, 15.0));
-		v->addMembershipFunction("jogging",     new Math::Trapezoidal(10.0, 15.0, 15.0, 20.0));
-		v->addMembershipFunction("sprint",      new Math::RampAsc(90.0, 100.0));
-		fStage1.addVariable(v);
+	//OUTPUTS
+	v = new FVariable("dash", 0.0, 110.0);
+	v->addMembershipFunction("walk",        new Math::RampDesc(10.0, 20.0));
+	v->addMembershipFunction("jogging",     new Math::Trapezoidal(0.0, 15.0, 15.0, 30.0));
+	v->addMembershipFunction("sprint",      new Math::RampAsc(90.0, 100.0));
+	fStage1.addVariable(v);
 
-		v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
-		v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
-		v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
-		v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
-		fStage2Slow.addVariable(v);
-		v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
-		v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
-		v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
-		v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
-		fStage2Jogging.addVariable(v);
-		v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
-		v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
-		v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
-		v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
-		fStage2Sprint.addVariable(v);
+	v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
+	v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
+	v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
+	v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
+	fStage2Slow.addVariable(v);
+	v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
+	v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
+	v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
+	v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
+	fStage2Jogging.addVariable(v);
+	v = new FVariable("action", -1.0, 3.0); //NO INCLUIR CON AG
+	v->addMembershipFunction("stay",        new Math::Triangular(-1.0, 0.0, 1.0));
+	v->addMembershipFunction("turn",        new Math::Triangular(0.0, 1.0, 2.0));
+	v->addMembershipFunction("dodge",      	new Math::Triangular(1.0, 2.0, 3.0));
+	fStage2Sprint.addVariable(v);
 
-		v = new FVariable("turn", -90.0, 90.0);
-		v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -30.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -10.0, -10.0, 0.0));
-		v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 10.0, 10.0, 60.0));
-		v->addMembershipFunction("hRight",  	new Math::RampAsc(30.0, 90.0));
-		fStage3Stay.addVariable(v);
-		v = new FVariable("turn", -90.0, 90.0);
-		v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -30.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -10.0, -10.0, 0.0));
-		v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 10.0, 10.0, 60.0));
-		v->addMembershipFunction("hRight",  	new Math::RampAsc(30.0, 90.0));
-		fStage3Turn.addVariable(v);
-		v = new FVariable("turn", -90.0, 90.0);
-		v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -30.0));
-		v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -10.0, -10.0, 0.0));
-		v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
-		v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 10.0, 10.0, 60.0));
-		v->addMembershipFunction("hRight",  	new Math::RampAsc(30.0, 90.0));
-		fStage3Strafe.addVariable(v);
+	v = new FVariable("turn", -90.0, 90.0);
+	v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -15.0, -15.0, 0.0));
+	v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 15.0, 15.0, 60.0));
+	v->addMembershipFunction("hRight",  	new Math::RampAsc(45.0, 90.0));
+	fStage3Stay.addVariable(v);
+	v = new FVariable("turn", -90.0, 90.0);
+	v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -15.0, -15.0, 0.0));
+	v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 15.0, 15.0, 60.0));
+	v->addMembershipFunction("hRight",  	new Math::RampAsc(45.0, 90.0));
+	fStage3Turn.addVariable(v);
+	v = new FVariable("turn", -90.0, 90.0);
+	v->addMembershipFunction("hLeft",       new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("left",        new Math::Trapezoidal(-60.0, -15.0, -15.0, 0.0));
+	v->addMembershipFunction("straight",    new Math::Trapezoidal(-10.0, 0.0, 0.0, 10.0));
+	v->addMembershipFunction("right",       new Math::Trapezoidal(0.0, 15.0, 15.0, 60.0));
+	v->addMembershipFunction("hRight",  	new Math::RampAsc(45.0, 90.0));
+	fStage3Strafe.addVariable(v);
 
-		v = new FVariable("strafe", -90.0, 90.0);
-		v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
-		v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
-		v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
-		v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
-		v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
-		fStage3Stay.addVariable(v);
-		v = new FVariable("strafe", -90.0, 90.0);
-		v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
-		v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
-		v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
-		v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
-		v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
-		fStage3Turn.addVariable(v);
-		v = new FVariable("strafe", -90.0, 90.0);
-		v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
-		v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
-		v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
-		v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
-		v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
-		fStage3Strafe.addVariable(v);
+	v = new FVariable("strafe", -90.0, 90.0);
+	v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
+	v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
+	v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
+	v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
+	fStage3Stay.addVariable(v);
+	v = new FVariable("strafe", -90.0, 90.0);
+	v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
+	v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
+	v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
+	v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
+	fStage3Turn.addVariable(v);
+	v = new FVariable("strafe", -90.0, 90.0);
+	v->addMembershipFunction("aLeft",  	 	new Math::RampDesc(-90.0, -45.0));
+	v->addMembershipFunction("dLeft",  		new Math::Trapezoidal(-90.0, -45.0, -45.0, 0.0));
+	v->addMembershipFunction("face",        new Math::Trapezoidal(-45.0, 0.0, 0.0, 45.0));
+	v->addMembershipFunction("dRight", 		new Math::Trapezoidal(0.0, 45.0, 45.0, 90.0));
+	v->addMembershipFunction("aRight", 		new Math::RampAsc(45.0, 90.0));
+	fStage3Strafe.addVariable(v);
 
-		//DA RULES
-		//STAGE 1
-		fStage1.addRule(FRule("effort = tired   	  & stamina = critical -> dash = walk"));
-		fStage1.addRule(FRule("effort = tired   	  & stamina = normal   -> dash = walk"));
-		fStage1.addRule(FRule("effort = tired   	  & stamina = high     -> dash = walk"));
-		fStage1.addRule(FRule("effort = fresh   	  & stamina = critical -> dash = jogging"));
-		fStage1.addRule(FRule("effort = fresh   	  & stamina = normal   -> dash = sprint"));
-		fStage1.addRule(FRule("effort = fresh   	  & stamina = high     -> dash = sprint"));
+	//DA RULES
+	//STAGE 1
+	fStage1.addRule(FRule("effort = tired   	  & stamina = critical -> dash = walk"));
+	fStage1.addRule(FRule("effort = tired   	  & stamina = normal   -> dash = sprint"));
+	fStage1.addRule(FRule("effort = tired   	  & stamina = high     -> dash = sprint"));
+	fStage1.addRule(FRule("effort = fresh   	  & stamina = critical -> dash = walk"));
+	fStage1.addRule(FRule("effort = fresh   	  & stamina = normal   -> dash = walk"));
+	fStage1.addRule(FRule("effort = fresh   	  & stamina = high     -> dash = sprint"));
 
-		//STAGE 2
-		//Stage 1 = slow
-		fStage2Slow.addRule(FRule("distance = vClose	& relSpeed = away    	-> action =  stay"));
-		fStage2Slow.addRule(FRule("distance = vClose   	& relSpeed = slow    	-> action =  dodge"));
-		fStage2Slow.addRule(FRule("distance = vClose 	& relSpeed = fast    	-> action =  dodge"));
-		fStage2Slow.addRule(FRule("distance = close  	& relSpeed = away    	-> action =  stay"));
-		fStage2Slow.addRule(FRule("distance = close  	& relSpeed = slow    	-> action =  turn"));
-		fStage2Slow.addRule(FRule("distance = close  	& relSpeed = fast    	-> action =  turn"));
-		fStage2Slow.addRule(FRule("distance = far   	& relSpeed = away    	-> action =  stay"));
-		fStage2Slow.addRule(FRule("distance = far   	& relSpeed = slow    	-> action =  stay"));
-		fStage2Slow.addRule(FRule("distance = far   	& relSpeed = fast    	-> action =  stay"));
+	//STAGE 2
+	//Stage 1 = slow
+	fStage2Slow.addRule(FRule("distance = vClose	& relSpeed = away    	-> action =  stay"));
+	fStage2Slow.addRule(FRule("distance = vClose   	& relSpeed = slow    	-> action =  dodge"));
+	fStage2Slow.addRule(FRule("distance = vClose 	& relSpeed = fast    	-> action =  dodge"));
+	fStage2Slow.addRule(FRule("distance = close  	& relSpeed = away    	-> action =  stay"));
+	fStage2Slow.addRule(FRule("distance = close  	& relSpeed = slow    	-> action =  turn"));
+	fStage2Slow.addRule(FRule("distance = close  	& relSpeed = fast    	-> action =  turn"));
+	fStage2Slow.addRule(FRule("distance = far   	& relSpeed = away    	-> action =  stay"));
+	fStage2Slow.addRule(FRule("distance = far   	& relSpeed = slow    	-> action =  stay"));
+	fStage2Slow.addRule(FRule("distance = far   	& relSpeed = fast    	-> action =  stay"));
 
-		//Stage 1 = Jogging
-		fStage2Jogging.addRule(FRule("distance = vClose  	& relSpeed = away    	-> action =  stay"));
-		fStage2Jogging.addRule(FRule("distance = vClose   	& relSpeed = slow    	-> action =  dodge"));
-		fStage2Jogging.addRule(FRule("distance = vClose   	& relSpeed = fast    	-> action =  dodge"));
-		fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = away   	-> action =  stay"));
-		fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = slow   	-> action =  turn"));
-		fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = fast   	-> action =  turn"));
-		fStage2Jogging.addRule(FRule("distance = far   		& relSpeed = away   	-> action =  stay"));
-		fStage2Jogging.addRule(FRule("distance = far  	 	& relSpeed = slow   	-> action =  stay"));
-		fStage2Jogging.addRule(FRule("distance = far   		& relSpeed = fast   	-> action =  stay"));
+	//Stage 1 = Jogging
+	fStage2Jogging.addRule(FRule("distance = vClose  	& relSpeed = away    	-> action =  stay"));
+	fStage2Jogging.addRule(FRule("distance = vClose   	& relSpeed = slow    	-> action =  dodge"));
+	fStage2Jogging.addRule(FRule("distance = vClose   	& relSpeed = fast    	-> action =  dodge"));
+	fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = away   	-> action =  stay"));
+	fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = slow   	-> action =  turn"));
+	fStage2Jogging.addRule(FRule("distance = close   	& relSpeed = fast   	-> action =  turn"));
+	fStage2Jogging.addRule(FRule("distance = far   		& relSpeed = away   	-> action =  stay"));
+	fStage2Jogging.addRule(FRule("distance = far  	 	& relSpeed = slow   	-> action =  stay"));
+	fStage2Jogging.addRule(FRule("distance = far   		& relSpeed = fast   	-> action =  stay"));
 
-		//Stage 1 = Sprint
-		fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = away		-> action =  stay"));
-		fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = slow   	-> action =  dodge"));
-		fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = fast   	-> action =  dodge"));
-		fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = away   	-> action =  stay"));
-		fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = slow   	-> action =  turn"));
-		fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = fast   	-> action =  turn"));
-		fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = away   	-> action =  stay"));
-		fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = slow   	-> action =  stay"));
-		fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = fast   	-> action =  stay"));
+	//Stage 1 = Sprint
+	fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = away		-> action =  stay"));
+	fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = slow   	-> action =  dodge"));
+	fStage2Sprint.addRule(FRule("distance = vClose   	& relSpeed = fast   	-> action =  dodge"));
+	fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = away   	-> action =  stay"));
+	fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = slow   	-> action =  turn"));
+	fStage2Sprint.addRule(FRule("distance = close   	& relSpeed = fast   	-> action =  turn"));
+	fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = away   	-> action =  stay"));
+	fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = slow   	-> action =  stay"));
+	fStage2Sprint.addRule(FRule("distance = far   		& relSpeed = fast   	-> action =  stay"));
 
-		//Stage 2 = Stay
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = static		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = static		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = toRight	-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = static		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = toRight	-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
+	//Stage 2 = Stay
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = static		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = static		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = toRight	-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = static		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = toRight	-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
 
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = static		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = static		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = static		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
-		fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = static		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = static		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = static		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
+	fStage3Stay.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
 
-		//Stage 2 = Turn
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = static		-> turn = right"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = hLeft"));
-		fStage3Turn.addRule(FRule("direction = center	& angSpeed = toLeft		-> turn = right"));
-		if(rightFlank){// Go Right Preference
-			fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> turn = right"));
-		} else { // Go Left Preference
-			fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> turn = left"));
-		}
-		fStage3Turn.addRule(FRule("direction = center	& angSpeed = toRight	-> turn = left"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = toLeft		-> turn = hRight"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = static		-> turn = left"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = toRight	-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
+	//Stage 2 = Turn
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = static		-> turn = right"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = hRight"));
+	fStage3Turn.addRule(FRule("direction = center	& angSpeed = toLeft		-> turn = right"));
+	if(rightFlank){// Go Right Preference
+		fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> turn = right"));
+	} else { // Go Left Preference
+		fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> turn = left"));
+	}
+	fStage3Turn.addRule(FRule("direction = center	& angSpeed = toRight	-> turn = left"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = toLeft		-> turn = hLeft"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = static		-> turn = left"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = toRight	-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
 
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = static		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = center	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = static		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
-		fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = static		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = center	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = center	& angSpeed = static		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = static		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
+	fStage3Turn.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
 
-		//Stage 2 = Strafe
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = static		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toLeft		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = center		& angSpeed = static		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toRight	-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = right		& angSpeed = toLeft		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = right		& angSpeed = static		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = right		& angSpeed = toRight	-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
+	//Stage 2 = Strafe
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = static		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toLeft		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = static		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toRight	-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toLeft		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = center		& angSpeed = static		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toRight	-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = right		& angSpeed = toLeft		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = right		& angSpeed = static		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = right		& angSpeed = toRight	-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = static		-> turn = straight"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toRight	-> turn = straight"));
 
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = static		-> strafe = dRight"));
-		fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = aLeft"));
-		fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toLeft		-> strafe = dRight"));
-		if(rightFlank){// Go Right Preference
-			fStage3Strafe.addRule(FRule("direction = center	& angSpeed = static		-> strafe = dRight"));
-		} else { // Go Left Preference
-			fStage3Strafe.addRule(FRule("direction = center	& angSpeed = static		-> strafe = dLeft"));
-		}
-		fStage3Strafe.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = dLeft"));
-		fStage3Strafe.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = aRight"));
-		fStage3Strafe.addRule(FRule("direction = right	& angSpeed = static		-> strafe = dLeft"));
-		fStage3Strafe.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
-		fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = static		-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farLeft	& angSpeed = toRight	-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toLeft		-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = static		-> strafe = dRight"));
+	fStage3Strafe.addRule(FRule("direction = left		& angSpeed = toRight	-> strafe = aRight"));
+	fStage3Strafe.addRule(FRule("direction = center		& angSpeed = toLeft		-> strafe = dRight"));
+	if(rightFlank){// Go Right Preference
+		fStage3Strafe.addRule(FRule("direction = center	& angSpeed = static		-> strafe = dRight"));
+	} else { // Go Left Preference
+		fStage3Strafe.addRule(FRule("direction = center	& angSpeed = static		-> strafe = dLeft"));
+	}
+	fStage3Strafe.addRule(FRule("direction = center	& angSpeed = toRight	-> strafe = dLeft"));
+	fStage3Strafe.addRule(FRule("direction = right	& angSpeed = toLeft		-> strafe = aLeft"));
+	fStage3Strafe.addRule(FRule("direction = right	& angSpeed = static		-> strafe = dLeft"));
+	fStage3Strafe.addRule(FRule("direction = right	& angSpeed = toRight	-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toLeft		-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = static		-> strafe = face"));
+	fStage3Strafe.addRule(FRule("direction = farRight	& angSpeed = toRight	-> strafe = face"));
 }
 
 /*! Obtains the output of the fuzzy
