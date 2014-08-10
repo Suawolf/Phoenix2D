@@ -645,36 +645,32 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 				arrived = true;
 			}
 
-			//EVALUA TERMINA CICLO
-			//ACOMODAR QUE SOLO FUZZY LO HAGA
-			if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
-				if ((Game::GAME_TIME - timeInit) > 1200){
-					expDone = true;
-				}
-			}
-			if(expDone){
-				totalStamina = staminaInit - Self::STAMINA_CAPACITY;
-				totalTime = Game::GAME_TIME - timeInit;
-				std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-				std::clog << "P1-," << noExp << ",: Team: ,"<< Self::TEAM_NAME <<", Sta: ," << totalStamina << ", Time:  ," << totalTime <<  ", Coll: ," << noCollisions << std::endl;
-				double eval = 2000 + (800 - totalTime) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
-				if ((eval < 1.0) || (totalTime >= 1200.0)){
-					eval = 1.0;
-				}
-				std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
-				std::clog << "P1-," << noExp << ",: Eval: ," << eval << std::endl;
-
-
-				if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
-					it->fit = eval;
-				}
-				commands->say("END");
-			}
-
 		}
+		//EVALUA TERMINA CICLO
+		//ACOMODAR QUE SOLO FUZZY LO HAGA
+		if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+			if ((Game::GAME_TIME - timeInit) > 1200){
+				expDone = true;
+			}
+		}
+		if(expDone){
+			totalStamina = staminaInit - Self::STAMINA_CAPACITY;
+			totalTime = Game::GAME_TIME - timeInit;
+			std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+			std::clog << "P1-," << noExp << ",: Team: ,"<< Self::TEAM_NAME <<", Sta: ," << totalStamina << ", Time:  ," << totalTime <<  ", Coll: ," << noCollisions << std::endl;
+			double eval = 2000 + (800 - totalTime) + 0.01 * (25000 - totalStamina) - (100 * noCollisions);
+			if ((eval < 1.0) || (totalTime >= 1200.0)){
+				eval = 1.0;
+			}
+			std::cout << Game::GAME_TIME << " : Eval: " << eval << std::endl;
+			std::clog << "P1-," << noExp << ",: Eval: ," << eval << std::endl;
 
 
-
+			if((!Self::TEAM_NAME.compare("Fuzzy")) && onGA){
+				it->fit = eval;
+			}
+			commands->say("END");
+		}
 }
 
 void onFinish() {
