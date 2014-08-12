@@ -475,7 +475,7 @@ void executePlayOn(WorldModel worldModel, std::vector<Message> messages, Command
 		totalStamina = staminaInit - Self::STAMINA_CAPACITY;
 		totalTime = Game::GAME_TIME - timeInit;
 		std::cout << Game::GAME_TIME << ": SE ACABO: Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
-		std::clog <<"P3-" << ++noExp << ": Team: "<< Self::TEAM_NAME <<" Sta: " << totalStamina << " Time:  " << totalTime <<  " Coll: " << noCollisions << std::endl;
+		std::clog <<"P3-," << ++noExp << ",: Team: ,"<< Self::TEAM_NAME << ", Sta: ," << totalStamina << ", Time:  ," << totalTime <<  ", Coll: ," << noCollisions << std::endl;
 		commands->say("END");
 	}
 
